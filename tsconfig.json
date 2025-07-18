@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    "types": [],
+    "target": "ESNext",
+    "declaration": true,
+    "declarationMap": true,
+    "useDefineForClassFields": true,
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "allowJs": false,
+    "outDir": "dist",
+    "skipLibCheck": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "NodeNext",
+    "moduleResolution": "nodenext", 
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "typeRoots": [
+      "./node_modules/@types/", "./node_modules"
+    ],
+    "noEmit": false
+  },
+  "include": [
+    "src",
+    "post-build.mjs",
+    "./.eslintrc.cjs"
+  ]
+}
