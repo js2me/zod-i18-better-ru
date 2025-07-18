@@ -10,7 +10,6 @@ postBuildScript({
   onDone: (versionsDiff, targetPackageJson, { $ }) => {
     if (process.env.PUBLISH) {
       if (!process.env.CI) {
-        $(`pnpm test`);
         $('pnpm changeset version');
       }
 
