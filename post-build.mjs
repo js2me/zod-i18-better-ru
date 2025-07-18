@@ -5,7 +5,7 @@ postBuildScript({
   buildDir: 'dist',
   rootDir: '.',
   srcDirName: 'src',
-  filesToCopy: ['LICENSE', 'README.md', 'assets'],
+  filesToCopy: ['LICENSE', 'README.md'],
   updateVersion: process.env.PUBLISH_VERSION,
   onDone: (versionsDiff, targetPackageJson, { $ }) => {
     if (process.env.PUBLISH) {
