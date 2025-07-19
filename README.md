@@ -16,6 +16,8 @@
 
 A bit better ru localization for valibot  
 
+Added translation for `string`, `number` etc   
+
 ## Usage   
 
 ```ts
