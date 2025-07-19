@@ -29,5 +29,5 @@ setGlobalConfig({ lang: 'better-ru' });
 
 ## Contribution Guide    
 
-Want to contribute ? [Follow this guide](https://github.com/js2me/valibot-i18n-better-ru/blob/master/CONTRIBUTING.md)  
+Want to contribute ? [Follow this guide](https://github.com/js2me/valibot-i18n-better-ru/blob/main/CONTRIBUTING.md)  
 
