@@ -125,11 +125,21 @@ const formatReceived = (received: any): any => {
 
 const localeName = 'better-ru';
 
-setSchemaMessage(
-  (issue) =>
-    `Неправильный тип: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
+const NO_VALUE_TEXT_MESSAGE = `Значение должно быть заполнено`;
+
+setSchemaMessage((issue) => {
+  const expectedText = formatExpected(issue.expected);
+  const receivedText = formatReceived(issue.received);
+
+  if (
+    expectedText === formatExpected('!null') &&
+    receivedText === formatReceived('null')
+  ) {
+    return NO_VALUE_TEXT_MESSAGE;
+  }
+
+  return `Неправильный тип: ${expectedText}, ${receivedText}`;
+}, localeName);
 setSpecificMessage(
   base64,
   (issue) => `Неправильный Base64: ${formatReceived(issue.received)}`,
@@ -421,11 +431,7 @@ setSpecificMessage(
   (issue) => `Неправильный Nano ID: ${formatReceived(issue.received)}`,
   localeName,
 );
-setSpecificMessage(
-  nonEmpty,
-  () => `Значение не должно быть пустым`,
-  localeName,
-);
+setSpecificMessage(nonEmpty, () => NO_VALUE_TEXT_MESSAGE, localeName);
 setSpecificMessage(
   notBytes,
   (issue) =>
