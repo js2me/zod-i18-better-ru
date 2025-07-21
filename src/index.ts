@@ -423,7 +423,7 @@ setSpecificMessage(
 );
 setSpecificMessage(
   nonEmpty,
-  () => `Значение должно не должно быть пустым`,
+  () => `Значение не должно быть пустым`,
   localeName,
 );
 setSpecificMessage(
