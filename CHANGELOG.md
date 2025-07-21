@@ -1,5 +1,13 @@
 # valibot-i18n-better-ru
 
+## 1.0.2
+
+### Patch Changes
+
+- [`53e3ffe`](https://github.com/js2me/valibot-i18n-better-ru/commit/53e3ffef40c466a3569607bae3d960e4c8910662) Thanks [@js2me](https://github.com/js2me)! - added missing locale for undefined
+
+- [`32ea850`](https://github.com/js2me/valibot-i18n-better-ru/commit/32ea8502cb51ff8d7b6057a8da4d04cca899e6ed) Thanks [@js2me](https://github.com/js2me)! - update nonEmpty ru message
+
 ## 1.0.1
 
 ### Patch Changes
