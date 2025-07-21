@@ -1,5 +1,11 @@
 # valibot-i18n-better-ru
 
+## 1.0.3
+
+### Patch Changes
+
+- [`8c69e21`](https://github.com/js2me/valibot-i18n-better-ru/commit/8c69e21121884242e2e3440e4dd483ac352d2716) Thanks [@js2me](https://github.com/js2me)! - fix typo in nonEmpty
+
 ## 1.0.2
 
 ### Patch Changes
