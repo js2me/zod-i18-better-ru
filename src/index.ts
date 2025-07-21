@@ -422,8 +422,7 @@ setSpecificMessage(
 );
 setSpecificMessage(
   nonEmpty,
-  (issue) =>
-    `Неправильная длина: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
+  () => `Значение должно не должно быть пустым`,
   localeName,
 );
 setSpecificMessage(
