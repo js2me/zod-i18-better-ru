@@ -96,6 +96,7 @@ const valueLocales: Record<any, string> = {
   never: 'неожидаемое значение',
   NaN: 'не-число',
   null: 'пустое значение',
+  undefined: 'пустое значение',
 };
 
 const femalePrimitives = new Set(['string', 'Date', 'Map']);
