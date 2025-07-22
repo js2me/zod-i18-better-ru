@@ -131,10 +131,7 @@ setSchemaMessage((issue) => {
   const expectedText = formatExpected(issue.expected);
   const receivedText = formatReceived(issue.received);
 
-  if (
-    expectedText === formatExpected('!null') &&
-    receivedText === formatReceived('null')
-  ) {
+  if (receivedText === formatReceived('null')) {
     return NO_VALUE_TEXT_MESSAGE;
   }
 
