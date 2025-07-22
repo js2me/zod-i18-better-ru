@@ -1,6 +1,6 @@
 {
   "name": "valibot-i18n-better-ru",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "scripts": {
     "prepare": "pnpm dev:install-hooks",
     "clean": "rimraf dist",
