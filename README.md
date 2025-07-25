@@ -20,9 +20,10 @@ Added translation for `string`, `number` etc
 ## Usage   
 
 ```ts
-import "zod-i18n-better-ru";
+import z from 'zod';
+import { betterRuLocale } from 'zod-i18n-better-ru';
 
-setGlobalConfig({ lang: 'better-ru' });
+z.config(ruLocale());
 ```
 
 
