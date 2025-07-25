@@ -38,7 +38,13 @@ interface RussianSizable {
   };
   verb: string;
 }
-const error: () => $ZodErrorMap = () => {
+
+interface Opts {
+  extraTypeLocales?: Record<string, string>;
+  extraNouns?: Record<string, any>;
+}
+
+const error = (opts?: Opts): $ZodErrorMap => {
   const Sizable: Record<string, RussianSizable> = {
     string: {
       unit: {
@@ -81,30 +87,33 @@ const error: () => $ZodErrorMap = () => {
   const typeLocales: Record<any, string> = {
     string: 'строка',
     number: 'число',
+    int: 'целое число',
     boolean: 'логическое значение',
-    Object: 'объект',
-    Array: 'массив',
+    object: 'объект',
+    array: 'массив',
     bigint: 'большое число',
-    Blob: 'блоб-объект',
-    File: 'файл',
-    Function: 'функция',
-    Map: 'карта',
-    Set: 'набор',
+    blob: 'блоб-объект',
+    file: 'файл',
+    function: 'функция',
+    map: 'карта',
+    set: 'набор',
     unknown: 'неизвестное значение',
-    Date: 'дата',
+    date: 'дата',
     never: 'неожидаемое значение',
-    NaN: 'не-число',
+    nan: 'не-число',
     null: 'пустое значение',
     undefined: 'пустое значение',
     any: 'значение',
+    ...opts?.extraTypeLocales,
   };
 
   const getLocaledType = (data: any): string => {
-    const dataType = typeof data;
+    const keyedValue = `${data}`.toLowerCase();
+    const dataType = (typeof data).toLowerCase();
 
     if (dataType === 'object') {
       if (Array.isArray(data)) {
-        return typeLocales.Array;
+        return typeLocales.array;
       }
 
       if (
@@ -115,7 +124,7 @@ const error: () => $ZodErrorMap = () => {
       }
     }
 
-    return typeLocales[`${data}`] || typeLocales[dataType] || dataType;
+    return typeLocales[keyedValue] || `${data}`;
   };
 
   const Nouns: {
@@ -149,6 +158,7 @@ const error: () => $ZodErrorMap = () => {
     e164: 'номер E.164',
     jwt: 'JWT',
     template_literal: 'ввод',
+    ...opts?.extraNouns,
   };
 
   const femaledTypes = new Set([
@@ -193,7 +203,10 @@ const error: () => $ZodErrorMap = () => {
       case 'invalid_value': {
         if (issue.values.length === 1)
           return `Неверный ввод: ${f.expects(util.stringifyPrimitive(getLocaledType(issue.values[0])))}`;
-        return `Неверный вариант: ожидалось одно из ${util.joinValues(issue.values.map(getLocaledType), '|')}`;
+        return `Неверный вариант: ожидалось одно из ${util.joinValues(
+          issue.values.map((value) => getLocaledType(value)),
+          '|',
+        )}`;
       }
       case 'too_big': {
         const adj = issue.inclusive ? '<=' : '<';
@@ -270,8 +283,8 @@ const error: () => $ZodErrorMap = () => {
   };
 };
 
-export function betterRuLocale(): { localeError: $ZodErrorMap } {
+export function betterRuLocale(opts?: Opts): { localeError: $ZodErrorMap } {
   return {
-    localeError: error(),
+    localeError: error(opts),
   };
 }
