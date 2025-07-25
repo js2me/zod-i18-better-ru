@@ -1,534 +1,277 @@
-import {
-  base64,
-  bic,
-  bytes,
-  check,
-  checkAsync,
-  checkItems,
-  checkItemsAsync,
-  creditCard,
-  cuid2,
-  decimal,
-  digits,
-  email,
-  emoji,
-  empty,
-  endsWith,
-  everyItem,
-  excludes,
-  finite,
-  graphemes,
-  hash,
-  hexadecimal,
-  hexColor,
-  imei,
-  includes,
-  integer,
-  ip,
-  ipv4,
-  ipv6,
-  isoDate,
-  isoDateTime,
-  isoTime,
-  isoTimeSecond,
-  isoTimestamp,
-  isoWeek,
-  length,
-  mac,
-  mac48,
-  mac64,
-  maxBytes,
-  maxGraphemes,
-  maxLength,
-  maxSize,
-  maxValue,
-  maxWords,
-  mimeType,
-  minBytes,
-  minGraphemes,
-  minLength,
-  minSize,
-  minValue,
-  minWords,
-  multipleOf,
-  nanoid,
-  nonEmpty,
-  notBytes,
-  notGraphemes,
-  notLength,
-  notSize,
-  notValue,
-  notWords,
-  octal,
-  partialCheck,
-  regex,
-  safeInteger,
-  setSchemaMessage,
-  setSpecificMessage,
-  size,
-  someItem,
-  startsWith,
-  ulid,
-  url,
-  uuid,
-  value,
-  words,
-} from 'valibot';
+/* eslint-disable sonarjs/no-useless-intersection */
+/* eslint-disable no-duplicate-imports */
+/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable import/no-unresolved */
+import type { $ZodErrorMap, $ZodStringFormats } from 'zod/v4/core';
+import { util } from 'zod/v4/core';
 
-const valueLocales: Record<any, string> = {
-  string: 'строка',
-  number: 'число',
-  boolean: 'логическое значение',
-  Object: 'объект',
-  any: 'что угодно',
-  Array: 'массив',
-  bigint: 'большое число',
-  Blob: 'блоб-объект',
-  File: 'файл',
-  Function: 'функция',
-  Map: 'карта',
-  Set: 'набор',
-  unknown: 'неизвестно',
-  Date: 'дата',
-  '!null': 'не пустое значение',
-  '(!null & !undefined)': 'не пустое значение',
-  '!undefined': 'не пустое значение',
-  never: 'неожидаемое значение',
-  NaN: 'не-число',
-  null: 'пустое значение',
-  undefined: 'пустое значение',
-};
+function getRussianPlural(
+  count: number,
+  one: string,
+  few: string,
+  many: string,
+): string {
+  const absCount = Math.abs(count);
+  const lastDigit = absCount % 10;
+  const lastTwoDigits = absCount % 100;
 
-const femalePrimitives = new Set(['string', 'Date', 'Map']);
-
-const formatExpected = (expected: any): any => {
-  let expectedWord = 'ожидалось';
-  const expectedLabel = valueLocales[expected] ?? expected;
-
-  if (femalePrimitives.has(expected)) {
-    expectedWord = 'ожидалась';
+  if (lastTwoDigits >= 11 && lastTwoDigits <= 19) {
+    return many;
   }
 
-  return `${expectedWord} ${expectedLabel}`;
-};
-
-const formatReceived = (received: any): any => {
-  let receivedWord = 'получено';
-  const expectedLabel = valueLocales[received] ?? received;
-
-  if (femalePrimitives.has(received)) {
-    receivedWord = 'получена';
+  if (lastDigit === 1) {
+    return one;
   }
 
-  return `${receivedWord} ${expectedLabel}`;
-};
-
-const localeName = 'better-ru';
-
-const NO_VALUE_TEXT_MESSAGE = `Значение должно быть заполнено`;
-
-setSchemaMessage((issue) => {
-  const expectedText = formatExpected(issue.expected);
-  const receivedText = formatReceived(issue.received);
-
-  if (receivedText === formatReceived('null')) {
-    return NO_VALUE_TEXT_MESSAGE;
+  if (lastDigit >= 2 && lastDigit <= 4) {
+    return few;
   }
 
-  return `Неправильный тип: ${expectedText}, ${receivedText}`;
-}, localeName);
-setSpecificMessage(
-  base64,
-  (issue) => `Неправильный Base64: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  bic,
-  (issue) => `Неправильный BIC: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  bytes,
-  (issue) =>
-    `Неправильное количество байтов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  check,
-  (issue) => `Неправильные данные: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  checkAsync,
-  (issue) => `Неправильные данные: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  checkItems,
-  (issue) => `Неправильный элемент: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  checkItemsAsync,
-  (issue) => `Неправильный элемент: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  creditCard,
-  (issue) =>
-    `Неправильный номер кредитной карты: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  cuid2,
-  (issue) => `Неправильный Cuid2: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  decimal,
-  (issue) =>
-    `Неправильное десятичное значение: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  digits,
-  (issue) => `Неправильное число: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  email,
-  (issue) => `Неправильный email: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  emoji,
-  (issue) => `Неправильный эмодзи: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  empty,
-  (issue) =>
-    `Неправильная длина: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  endsWith,
-  (issue) =>
-    `Неправильный конец: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  everyItem,
-  (issue) => `Неправильный элемент: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  excludes,
-  (issue) =>
-    `Неправильное вхождение: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  finite,
-  (issue) => `Неправильное конечное число: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  graphemes,
-  (issue) =>
-    `Неправильное количество графем: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  hash,
-  (issue) => `Неправильный хеш: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  hexColor,
-  (issue) =>
-    `Неправильный шестнадцатеричный цвет: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  hexadecimal,
-  (issue) =>
-    `Неправильное шестнадцатеричное значение: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  imei,
-  (issue) => `Неправильный IMEI: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  includes,
-  (issue) =>
-    `Неправильное вхождение: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  integer,
-  (issue) => `Неправильное целое число: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  ip,
-  (issue) => `Неправильный IP: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  ipv4,
-  (issue) => `Неправильный IPv4: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  ipv6,
-  (issue) => `Неправильный IPv6: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  isoDate,
-  (issue) => `Неправильная дата: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  isoDateTime,
-  (issue) => `Неправильные дата и время: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  isoTime,
-  (issue) => `Неправильное время: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  isoTimeSecond,
-  (issue) =>
-    `Неправильное время с секундами: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  isoTimestamp,
-  (issue) => `Неправильная метка времени: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  isoWeek,
-  (issue) => `Неправильная неделя: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  length,
-  (issue) =>
-    `Неправильная длина: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  mac,
-  (issue) => `Неправильный MAC: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  mac48,
-  (issue) => `Неправильный 48-битный MAC: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  mac64,
-  (issue) => `Неправильный 64-битный MAC: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  maxBytes,
-  (issue) =>
-    `Неправильное количество байтов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  maxGraphemes,
-  (issue) =>
-    `Неправильное количество графем: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  maxLength,
-  (issue) =>
-    `Неправильная длина: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  maxSize,
-  (issue) =>
-    `Неправильный размер: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  maxValue,
-  (issue) =>
-    `Неправильное значение: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  maxWords,
-  (issue) =>
-    `Неправильное количество слов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  mimeType,
-  (issue) =>
-    `Неправильный MIME тип: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  minBytes,
-  (issue) =>
-    `Неправильное количество байтов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  minGraphemes,
-  (issue) =>
-    `Неправильное количество графем: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  minLength,
-  (issue) =>
-    `Неправильная длина: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  minSize,
-  (issue) =>
-    `Неправильный размер: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  minValue,
-  (issue) =>
-    `Неправильное значение: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  minWords,
-  (issue) =>
-    `Неправильное количество слов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  multipleOf,
-  (issue) =>
-    `Неправильное кратное число: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  nanoid,
-  (issue) => `Неправильный Nano ID: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(nonEmpty, () => NO_VALUE_TEXT_MESSAGE, localeName);
-setSpecificMessage(
-  notBytes,
-  (issue) =>
-    `Неправильное количество байтов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  notGraphemes,
-  (issue) =>
-    `Неправильное количество графем: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  notLength,
-  (issue) =>
-    `Неправильная длина: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  notSize,
-  (issue) =>
-    `Неправильный размер: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  notValue,
-  (issue) =>
-    `Неправильное значение: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  notWords,
-  (issue) =>
-    `Неправильное количество слов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  octal,
-  (issue) =>
-    `Неправильный восьмеричное значение: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  partialCheck,
-  (issue) => `Неправильные данные: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  regex,
-  (issue) =>
-    `Неправильный формат: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  safeInteger,
-  (issue) =>
-    `Неправильное безопасное целое число: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  size,
-  (issue) =>
-    `Неправильный размер: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  someItem,
-  (issue) => `Неправильный элемент: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  startsWith,
-  (issue) =>
-    `Неправильное начало: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  ulid,
-  (issue) => `Неправильный ULID: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  url,
-  (issue) => `Неправильный URL: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  uuid,
-  (issue) => `Неправильный UUID: ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  value,
-  (issue) =>
-    `Неправильное значение: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
-setSpecificMessage(
-  words,
-  (issue) =>
-    `Неправильное количество слов: ${formatExpected(issue.expected)}, ${formatReceived(issue.received)}`,
-  localeName,
-);
+  return many;
+}
+
+interface RussianSizable {
+  unit: {
+    one: string;
+    few: string;
+    many: string;
+  };
+  verb: string;
+}
+const error: () => $ZodErrorMap = () => {
+  const Sizable: Record<string, RussianSizable> = {
+    string: {
+      unit: {
+        one: 'символ',
+        few: 'символа',
+        many: 'символов',
+      },
+      verb: 'иметь',
+    },
+    file: {
+      unit: {
+        one: 'байт',
+        few: 'байта',
+        many: 'байт',
+      },
+      verb: 'иметь',
+    },
+    array: {
+      unit: {
+        one: 'элемент',
+        few: 'элемента',
+        many: 'элементов',
+      },
+      verb: 'иметь',
+    },
+    set: {
+      unit: {
+        one: 'элемент',
+        few: 'элемента',
+        many: 'элементов',
+      },
+      verb: 'иметь',
+    },
+  };
+
+  function getSizing(origin: string): RussianSizable | null {
+    return Sizable[origin] ?? null;
+  }
+
+  const typeLocales: Record<any, string> = {
+    string: 'строка',
+    number: 'число',
+    boolean: 'логическое значение',
+    Object: 'объект',
+    Array: 'массив',
+    bigint: 'большое число',
+    Blob: 'блоб-объект',
+    File: 'файл',
+    Function: 'функция',
+    Map: 'карта',
+    Set: 'набор',
+    unknown: 'неизвестное значение',
+    Date: 'дата',
+    never: 'неожидаемое значение',
+    NaN: 'не-число',
+    null: 'пустое значение',
+    undefined: 'пустое значение',
+    any: 'значение',
+  };
+
+  const getLocaledType = (data: any): string => {
+    const dataType = typeof data;
+
+    if (dataType === 'object') {
+      if (Array.isArray(data)) {
+        return typeLocales.Array;
+      }
+
+      if (
+        Object.getPrototypeOf(data) !== Object.prototype &&
+        data.constructor
+      ) {
+        return typeLocales[data.constructor.name] || data.constructor.name;
+      }
+    }
+
+    return typeLocales[`${data}`] || typeLocales[dataType] || dataType;
+  };
+
+  const Nouns: {
+    [k in $ZodStringFormats | (string & {})]?: string;
+  } = {
+    regex: 'ввод',
+    email: 'email адрес',
+    url: 'URL',
+    emoji: 'эмодзи',
+    uuid: 'UUID',
+    uuidv4: 'UUIDv4',
+    uuidv6: 'UUIDv6',
+    nanoid: 'nanoid',
+    guid: 'GUID',
+    cuid: 'cuid',
+    cuid2: 'cuid2',
+    ulid: 'ULID',
+    xid: 'XID',
+    ksuid: 'KSUID',
+    datetime: 'ISO дата и время',
+    date: 'ISO дата',
+    time: 'ISO время',
+    duration: 'ISO длительность',
+    ipv4: 'IPv4 адрес',
+    ipv6: 'IPv6 адрес',
+    cidrv4: 'IPv4 диапазон',
+    cidrv6: 'IPv6 диапазон',
+    base64: 'строка в формате base64',
+    base64url: 'строка в формате base64url',
+    json_string: 'JSON строка',
+    e164: 'номер E.164',
+    jwt: 'JWT',
+    template_literal: 'ввод',
+  };
+
+  const femaledTypes = new Set([
+    typeLocales.Function,
+    typeLocales.string,
+    typeLocales.Date,
+    Nouns.datetime,
+    Nouns.date,
+    Nouns.json_string,
+    Nouns.base64,
+    Nouns.base64url,
+  ]);
+
+  const neuterTypes = new Set([Nouns.time]);
+
+  const f = {
+    expects: (v: any) => {
+      const formatted = getLocaledType(v);
+      if (femaledTypes.has(formatted)) {
+        return `ожидалась ${formatted}`;
+      }
+      return `ожидалось ${formatted}`;
+    },
+    received: (v: any) => {
+      const formatted = getLocaledType(v);
+      if (femaledTypes.has(formatted)) {
+        return `получена ${formatted}`;
+      }
+      return `получено ${formatted}`;
+    },
+  };
+
+  return (issue) => {
+    switch (issue.code) {
+      case 'invalid_type': {
+        if (issue.input == null && issue.expected != null) {
+          return `Значение должно быть заполнено`;
+        }
+
+        return `Неверный ввод: ${f.expects(issue.expected)}, ${f.received(issue.input)}`;
+      }
+      case 'invalid_value': {
+        if (issue.values.length === 1)
+          return `Неверный ввод: ${f.expects(util.stringifyPrimitive(getLocaledType(issue.values[0])))}`;
+        return `Неверный вариант: ожидалось одно из ${util.joinValues(issue.values.map(getLocaledType), '|')}`;
+      }
+      case 'too_big': {
+        const adj = issue.inclusive ? '<=' : '<';
+        const sizing = getSizing(issue.origin);
+        if (sizing) {
+          const maxValue = Number(issue.maximum);
+          const unit = getRussianPlural(
+            maxValue,
+            sizing.unit.one,
+            sizing.unit.few,
+            sizing.unit.many,
+          );
+          return `Слишком большое значение: ожидалось, что ${getLocaledType(issue.origin)} будет иметь ${adj}${issue.maximum.toString()} ${unit}`;
+        }
+        return `Слишком большое значение: ожидалось, что ${getLocaledType(issue.origin)} будет ${adj}${issue.maximum.toString()}`;
+      }
+      case 'too_small': {
+        const adj = issue.inclusive ? '>=' : '>';
+        const sizing = getSizing(issue.origin);
+        if (sizing) {
+          const minValue = Number(issue.minimum);
+          const unit = getRussianPlural(
+            minValue,
+            sizing.unit.one,
+            sizing.unit.few,
+            sizing.unit.many,
+          );
+          return `Слишком маленькое значение: ожидалось, что ${getLocaledType(issue.origin)} будет иметь ${adj}${issue.minimum.toString()} ${unit}`;
+        }
+        return `Слишком маленькое значение: ожидалось, что ${getLocaledType(issue.origin)} будет ${adj}${issue.minimum.toString()}`;
+      }
+      case 'invalid_format': {
+        const _issue = issue;
+        if (_issue.format === 'starts_with')
+          return `Неверная строка: должна начинаться с "${_issue.prefix}"`;
+        if (_issue.format === 'ends_with')
+          return `Неверная строка: должна заканчиваться на "${_issue.suffix}"`;
+        if (_issue.format === 'includes')
+          return `Неверная строка: должна содержать "${_issue.includes}"`;
+        if (_issue.format === 'regex')
+          return `Неверная строка: должна соответствовать шаблону ${_issue.pattern}`;
+
+        const format = Nouns[_issue.format] ?? issue.format;
+
+        if (neuterTypes.has(format)) {
+          return `Неверное ${format}`;
+        }
+
+        if (femaledTypes.has(format)) {
+          return `Неверная ${format}`;
+        }
+
+        return `Неверный ${format}`;
+      }
+      case 'not_multiple_of': {
+        return `Неверное число: должно быть кратным ${issue.divisor}`;
+      }
+      case 'unrecognized_keys': {
+        return `Нераспознанн${issue.keys.length > 1 ? 'ые' : 'ый'} ключ${issue.keys.length > 1 ? 'и' : ''}: ${util.joinValues(issue.keys, ', ')}`;
+      }
+      case 'invalid_key': {
+        return `Неверный ключ в ${issue.origin}`;
+      }
+      case 'invalid_union': {
+        return 'Неверные входные данные';
+      }
+      case 'invalid_element': {
+        return `Неверное значение в ${getLocaledType(issue.origin)}`;
+      }
+      default: {
+        return `Неверные входные данные`;
+      }
+    }
+  };
+};
+
+export function betterRuLocale(): { localeError: $ZodErrorMap } {
+  return {
+    localeError: error(),
+  };
+}

@@ -1,6 +1,6 @@
 {
-  "name": "valibot-i18n-better-ru",
-  "version": "1.0.4",
+  "name": "zod-i18n-better-ru",
+  "version": "1.0.0",
   "scripts": {
     "prepare": "pnpm dev:install-hooks",
     "clean": "rimraf dist",
@@ -26,26 +26,26 @@
     "dev:install-hooks": "if [ -z \"$CI\" ]; then lefthook install; fi"
   },
   "keywords": [
-    "valibot",
+    "zod",
     "i18n",
     "ru",
     "locale"
   ],
   "author": "js2me",
   "license": "MIT",
-  "description": "a bit better ru localization for valibot",
+  "description": "a bit better ru localization for zod",
   "type": "module",
   "bugs": {
-    "url": "https://github.com/js2me/valibot-i18n-better-ru/issues"
+    "url": "https://github.com/js2me/zod-i18n-better-ru/issues"
   },
-  "homepage": "https://github.com/js2me/valibot-i18n-better-ru",
+  "homepage": "https://github.com/js2me/zod-i18n-better-ru",
   "repository": {
     "type": "git",
-    "url": "git://github.com/js2me/valibot-i18n-better-ru"
+    "url": "git://github.com/js2me/zod-i18n-better-ru"
   },
   "dependencies": {},
   "peerDependencies": {
-    "valibot": "^1.1.0"
+    "zod": "^4.0.10"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.5.1",

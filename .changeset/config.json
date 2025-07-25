@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@3.1.1/schema.json",
   "changelog": [
     "@changesets/changelog-github",
-    { "repo": "js2me/valibot-i18n-better-ru" }
+    { "repo": "js2me/zod-i18n-better-ru" }
   ],
   "commit": false,
   "fixed": [],
