@@ -1,5 +1,11 @@
 # valibot-i18n-better-ru
 
+## 1.0.4
+
+### Patch Changes
+
+- [`952d237`](https://github.com/js2me/valibot-i18n-better-ru/commit/952d23776b18fcae020d55c7b226e15cc9433c23) Thanks [@js2me](https://github.com/js2me)! - better non empty validation ru message
+
 ## 1.0.3
 
 ### Patch Changes
