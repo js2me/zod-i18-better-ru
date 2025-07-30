@@ -42,9 +42,18 @@ interface RussianSizable {
 interface Opts {
   extraTypeLocales?: Record<string, string>;
   extraNouns?: Record<string, any>;
+  overrides?: {
+    /**
+     * @default `Значение должно быть заполнено`
+     */
+    valueIsRequired?: string;
+  };
 }
 
 const error = (opts?: Opts): $ZodErrorMap => {
+  const valueIsRequiredMessage =
+    opts?.overrides?.valueIsRequired ?? `Значение должно быть заполнено`;
+
   const Sizable: Record<string, RussianSizable> = {
     string: {
       unit: {
@@ -195,7 +204,7 @@ const error = (opts?: Opts): $ZodErrorMap => {
     switch (issue.code) {
       case 'invalid_type': {
         if (issue.input == null && issue.expected != null) {
-          return `Значение должно быть заполнено`;
+          return valueIsRequiredMessage;
         }
 
         return `Неверный ввод: ${f.expects(issue.expected)}, ${f.received(issue.input)}`;
@@ -211,6 +220,7 @@ const error = (opts?: Opts): $ZodErrorMap => {
       case 'too_big': {
         const adj = issue.inclusive ? '<=' : '<';
         const sizing = getSizing(issue.origin);
+
         if (sizing) {
           const maxValue = Number(issue.maximum);
           const unit = getRussianPlural(
@@ -224,8 +234,17 @@ const error = (opts?: Opts): $ZodErrorMap => {
         return `Слишком большое значение: ожидалось, что ${getLocaledType(issue.origin)} будет ${adj}${issue.maximum.toString()}`;
       }
       case 'too_small': {
+        if (
+          issue.origin === 'string' &&
+          issue.minimum > 0 &&
+          issue.input === ''
+        ) {
+          return valueIsRequiredMessage;
+        }
+
         const adj = issue.inclusive ? '>=' : '>';
         const sizing = getSizing(issue.origin);
+
         if (sizing) {
           const minValue = Number(issue.minimum);
           const unit = getRussianPlural(
