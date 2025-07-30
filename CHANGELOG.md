@@ -1,5 +1,13 @@
 # zod-i18n-better-ru
 
+## 1.1.0
+
+### Minor Changes
+
+- [`b852c23`](https://github.com/js2me/zod-i18n-better-ru/commit/b852c23f2072f5047d97a1fb8101b5fd5311c5f3) Thanks [@js2me](https://github.com/js2me)! - message about missing value apply for too_small rule (empty string only)
+
+- [`b852c23`](https://github.com/js2me/zod-i18n-better-ru/commit/b852c23f2072f5047d97a1fb8101b5fd5311c5f3) Thanks [@js2me](https://github.com/js2me)! - added overrides property to override some localized ru messages
+
 ## 1.0.2
 
 ### Patch Changes
