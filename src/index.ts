@@ -126,6 +126,7 @@ const error = (opts?: Opts): $ZodErrorMap => {
       }
 
       if (
+        data &&
         Object.getPrototypeOf(data) !== Object.prototype &&
         data.constructor
       ) {
