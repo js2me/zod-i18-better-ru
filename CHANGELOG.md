@@ -1,5 +1,11 @@
 # zod-i18n-better-ru
 
+## 1.1.1
+
+### Patch Changes
+
+- [`a45564e`](https://github.com/js2me/zod-i18n-better-ru/commit/a45564e263a3c5447d7a310df8c3a2f12e41ef0b) Thanks [@js2me](https://github.com/js2me)! - fix getLocaledType runtime error
+
 ## 1.1.0
 
 ### Minor Changes
